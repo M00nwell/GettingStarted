@@ -8,7 +8,7 @@
             <div class='col-md-2'>Filter by:</div>
             <div class='col-md-4'>
                 <input type='text' 
-                    [(ngModel)]='listFilter'/>
+                    [(ngModel)]='listFilter'/> <!-- Two-way Binding [(ngModel)]='data' -->
             </div>
         </div>
         <div class='row' *ngIf='listFilter'>
@@ -18,13 +18,13 @@
         </div>
 
         <div class='table-responsive'>
-            <table class='table' *ngIf="products && products.length">
+            <table class='table' *ngIf="products && products.length"><!-- Directive *ngIf: the element will not show if rhs is false --> 
                 <thead>
                     <tr>
                         <th>
                             <button class='btn btn-primary'
-                                (click)='toggleImage()'>
-                               {{isImageShowed ? 'Hide' : 'Show'}} Image
+                                (click)='toggleImage()'> <!-- Event Binding (event)='func()' -->
+<!-- Interpolation with expressions -->{{isImageShowed ? 'Hide' : 'Show'}} Image
                             </button>
                         </th>
                         <th>Product</th>
@@ -36,19 +36,28 @@
                     
                 </thead>
                 <tbody>
-                    <tr *ngFor = "let product of products">
+                    <tr *ngFor = "let product of products | productFilter: listFilter"> <!-- using custom pipe -->
                         <td>
                             <img *ngIf='isImageShowed'
                                 [src]='product.imageUrl'
                                 [title]='product.productName'
                                 [style.width.px]='80'
-                                [style.margin.px]='imageMargin'>
+                                [style.margin.px]='imageMargin'> <!-- Property Binding [property]='data' -->
                         </td>
-                        <td>{{product.productName}}</td>
-                        <td>{{product.productCode | lowercase}}</td>
+                        <td><a [routerLink]="['/product', product.productId]"> <!-- pass parameter to route -->
+                            {{product.productName}}</a></td> <!-- Interpolation -->
+                        <td>{{product.productCode | lowercase}}</td> <!-- Interpolation + Pipe -->
                         <td>{{product.releaseDate}}</td>
-                        <td>{{product.price | currency:'USD':true:'1.2-2'}}</td>
-                        <td>{{product.starRating}}</td>
+                        <td>{{product.price | currency:'USD':true:'1.2-2'}}</td> <!-- Interpolation + Pipe with arguments -->
+                        <td>
+                            <ai-star [rating]='product.starRating'
+                                (ratingClicked)='onRatingClicked($event)'>
+                                 <!-- Nested Component 
+                                 Input:  []='' property binding
+                                 Output:  ()='' event binding
+                                  -->
+                            </ai-star>
+                        </td>
                     </tr>
                 </tbody>
             </table>
