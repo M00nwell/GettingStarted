@@ -23,6 +23,8 @@ import {SharedModule} from '../shared/shared.module';
                 component: ProductDetailComponent}, //route with parameter
         ])
     ],
+    //No need export because all components are loaded through route, compared to Shared Module, StarComponent must export because it is used by selector
+
     //To register a service, add providers in component decorator
     providers: [
         ProductService,
